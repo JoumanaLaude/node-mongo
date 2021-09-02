@@ -1,35 +1,22 @@
-const assert = require('assert').strict;
+// simplified by removing callbacks and adding "return" & assert
+// mongodb automatically returns its return value as a promise
 
-// db we're using, doc we want to insert, collection doc is in, callback at the end of each method
-exports.insertDocument = (db, document, collection, callback) => {
+exports.insertDocument = (db, document, collection) => {
     const coll = db.collection(collection);
-    coll.insertOne(document, (err, result) => {
-        assert.strictEqual(err, null);
-        callback(result);
-        // callback that's defined somewhere else
-    });
+    return coll.insertOne(document);
 };
 
-exports.findDocuments = (db, collection, callback) => {
+exports.findDocuments = (db, collection) => {
     const coll = db.collection(collection);
-    coll.find().toArray((err, docs) => {
-        assert.strictEqual(err, null); // checking if any error when converting to array
-        callback(docs); // if not we take the array and run this callback
-    });
+    return coll.find().toArray();
 };
 
-exports.removeDocument = (db, document, collection, callback) => {
+exports.removeDocument = (db, document, collection) => {
     const coll = db.collection(collection);
-    coll.deleteOne(document, (err, result) => {
-        assert.strictEqual(err, null); 
-        callback(result); 
-    });
+    return coll.deleteOne(document);
 };
 
-exports.updateDocument = (db, document, update, collection, callback) => {
+exports.updateDocument = (db, document, update, collection) => {
     const coll = db.collection(collection);
-    coll.updateOne(document, { $set: update }, null, (err, result) => {
-        assert.strictEqual(err, null);
-        callback(result);
-    });
+    return coll.updateOne(document, { $set: update }, null);
 };
